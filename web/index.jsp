@@ -11,6 +11,10 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+  <button id="make-credential-button">
+            Do Magic
+  </button>
+
+  <script src="javaScriptFiles/frontpage.js"></script>
   </body>
 </html>
