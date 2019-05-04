@@ -24,5 +24,14 @@
         <url-pattern>/DoABarrelRoll</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FinalizeCredentials</servlet-name>
+        <servlet-class>FinalizeCredentials</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FinalizeCredentials</servlet-name>
+        <url-pattern>/DoATrick</url-pattern>
+    </servlet-mapping>
 
 </web-app>

@@ -17,7 +17,7 @@ public class MyCredentialRepository implements CredentialRepository {
     {
         try {
             originByteArray = "This Is alice in wonderland and I hope this text is long enough".getBytes("UTF-8");
-            AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 64);
+            AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 1);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

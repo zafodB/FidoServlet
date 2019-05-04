@@ -7,8 +7,8 @@ function registerNewCredential() {
         const makeCredentialOptions = {};
     _options = options;
 
-    console.log(str2ab(options.user.id));
-    console.log(str2ab(options.challenge));
+    // console.log(str2ab(options.user.id));
+    // console.log(str2ab(options.challenge));
 
     makeCredentialOptions.rp = options.rp;
 
@@ -19,13 +19,47 @@ function registerNewCredential() {
     makeCredentialOptions.challenge = str2ab(options.challenge);
     makeCredentialOptions.pubKeyCredParams = options.pubKeyCredParams;
 
-    console.log(makeCredentialOptions);
+    // console.log(makeCredentialOptions);
 
     return navigator.credentials.create({
         "publicKey": makeCredentialOptions
     });
 
-})
+    }).then(attestation => {
+
+
+    const publicKeyCredential = {};
+
+    if ('id' in attestation) {
+        publicKeyCredential.id = attestation.id;
+    }
+    if ('type' in attestation) {
+        publicKeyCredential.type = attestation.type;
+    }
+    if ('rawId' in attestation) {
+        publicKeyCredential.rawId = binToStr(attestation.rawId);
+    }
+    if (!attestation.response) {
+        showErrorMsg("Make Credential response lacking 'response' attribute");
+    }
+
+    const response = {};
+    response.clientDataJSON = binToStr(attestation.response.clientDataJSON);
+    response.attestationObject = binToStr(attestation.response.attestationObject);
+
+    // Check if transports are included in the registration response.
+    if (attestation.response.getTransports) {
+        response.transports = attestation.response.getTransports();
+    }
+
+    publicKeyCredential.response = response;
+
+    return _fetch('/DoATrick', {
+        data: JSON.stringify(publicKeyCredential),
+        session: _options.session.id
+    });
+
+    })
 }
 
 function _fetch(url, obj) {
@@ -100,6 +134,7 @@ function stringToByteArray(str) {
 }
 
 function str2ab(str) {
+    console.log(str);
     var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
     var bufView = new Uint16Array(buf);
     for (var i = 0, strLen = str.length; i < strLen; i++) {
