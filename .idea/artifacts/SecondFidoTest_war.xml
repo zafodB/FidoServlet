@@ -6,6 +6,8 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="lib">
           <element id="library" level="project" name="com.yubico:webauthn-server-core:1.1.0" />
+          <element id="library" level="project" name="org.pac4j:j2e-pac4j:4.1.0" />
+          <element id="library" level="project" name="org.mongodb:mongodb-driver-sync:3.9.0" />
         </element>
       </element>
       <element id="directory" name="javaScriptFiles">

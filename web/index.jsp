@@ -15,6 +15,12 @@
             Do Magic
   </button>
 
+  <br/>
+
+  <span id="outtext">
+    This is empty.
+  </span>
+
   <script src="javaScriptFiles/frontpage.js"></script>
   </body>
 </html>

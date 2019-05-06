@@ -54,10 +54,12 @@ function registerNewCredential() {
 
     publicKeyCredential.response = response;
 
-    return _fetch('/DoATrick', {
-        data: JSON.stringify(publicKeyCredential),
-        session: _options.session.id
-    });
+    // return _fetch('/DoATrick', {
+    //     data: JSON.stringify(publicKeyCredential),
+    //     session: _options.session.id
+    // });
+
+    return writeOutText(JSON.stringify(publicKeyCredential));
 
     })
 }
@@ -115,6 +117,12 @@ function b64EncodeUnicode(str) {
         }));
 }
 
+function binToStr(bin) {
+    return btoa(new Uint8Array(bin).reduce(
+        (s, byte) => s + String.fromCharCode(byte), ''
+    ));
+}
+
 function stringToByteArray(str) {
     var ch, st, re = [];
     for (var i = 0; i < str.length; i++ ) {
@@ -141,4 +149,10 @@ function str2ab(str) {
         bufView[i] = str.charCodeAt(i);
     }
     return buf;
+}
+
+function writeOutText(str) {
+    var newtext = document.createTextNode(str);
+    var spanXyz = document.getElementById("outtext");
+    spanXyz.appendChild(newtext);
 }
