@@ -20,8 +20,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
-    <orderEntry type="library" exported="" name="com.yubico:webauthn-server-core:1.1.0" level="project" />
     <orderEntry type="library" exported="" name="org.pac4j:j2e-pac4j:4.1.0" level="project" />
     <orderEntry type="library" exported="" name="org.mongodb:mongodb-driver-sync:3.9.0" level="project" />
+    <orderEntry type="library" exported="" name="com.yubico:webauthn-server-core:1.2.0" level="project" />
   </component>
 </module>

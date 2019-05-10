@@ -2,46 +2,31 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.StartRegistrationOptions;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
-import com.yubico.webauthn.data.RelyingPartyIdentity;
 import com.yubico.webauthn.data.UserIdentity;
-import org.pac4j.core.config.Config;
+import database.PkRequestConnector;
 
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Random;
 import javax.servlet.http.*;
 
 public class FidoTestSecond extends HttpServlet {
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, java.io.IOException {
 
+        doPost(request, response);
     }
 
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.io.IOException {
         // Set the response message's MIME type
         response.setContentType("application/json");
 
-        RelyingPartyIdentity rpIdentity = RelyingPartyIdentity.builder()
-                .id("fidoserver.ml")
-                .name("FIDO App")
-                .build();
-
-        RelyingParty rp = RelyingParty.builder()
-                .identity(rpIdentity)
-                .credentialRepository(new MyCredentialRepository())
-                .build();
-
-
         byte[] originByteArray;
         byte[] AliceUserBytes = null;
         {
             try {
                 originByteArray = "This Is alice in wonderland and I hope this text is long enough".getBytes("UTF-8");
-                AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 1);
+                AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 12);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -50,11 +35,13 @@ public class FidoTestSecond extends HttpServlet {
 
 //        rp.getCredentialRepository().getCredentialIdsForUsername().
 
-        PublicKeyCredentialCreationOptions pkrequest = rp.startRegistration(StartRegistrationOptions.builder()
+        ByteArray aliceIdBytes = new ByteArray(AliceUserBytes);
+
+        PublicKeyCredentialCreationOptions pkrequest = RpInstance.rp.startRegistration(StartRegistrationOptions.builder()
                 .user(UserIdentity.builder()
                         .name("alice")
                         .displayName("Alice Hypothetical")
-                        .id(new ByteArray(AliceUserBytes))
+                        .id(aliceIdBytes)
                         .build())
                 .build());
 
@@ -63,7 +50,11 @@ public class FidoTestSecond extends HttpServlet {
                 .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
                 .registerModule(new Jdk8Module());
 
+
         String json = jsonMapper.writeValueAsString(pkrequest);
+
+        PkRequestConnector.dropCollection();
+        PkRequestConnector.addRecord(pkrequest.getChallenge().toJsonString(), json);
 
         response.getWriter().println(json);
 

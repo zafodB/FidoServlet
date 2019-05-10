@@ -12,6 +12,8 @@ function registerNewCredential() {
 
     makeCredentialOptions.rp = options.rp;
 
+    options.rp.id
+
     makeCredentialOptions.user = options.user;
 
 
@@ -36,28 +38,30 @@ function registerNewCredential() {
     if ('type' in attestation) {
         publicKeyCredential.type = attestation.type;
     }
-    if ('rawId' in attestation) {
-        publicKeyCredential.rawId = binToStr(attestation.rawId);
+    if ('clientExtensionResults' in attestation) {
+        publicKeyCredential.clientExtensionResults = attestation.clientExtensionResults;
+    } else {
+        publicKeyCredential.clientExtensionResults = {};
     }
     if (!attestation.response) {
         showErrorMsg("Make Credential response lacking 'response' attribute");
     }
 
+
     const response = {};
     response.clientDataJSON = binToStr(attestation.response.clientDataJSON);
     response.attestationObject = binToStr(attestation.response.attestationObject);
 
-    // Check if transports are included in the registration response.
-    if (attestation.response.getTransports) {
-        response.transports = attestation.response.getTransports();
-    }
-
     publicKeyCredential.response = response;
 
-    // return _fetch('/DoATrick', {
-    //     data: JSON.stringify(publicKeyCredential),
-    //     session: _options.session.id
-    // });
+    return _fetch('/SecondFidoTest/DoATrick', {
+        data: JSON.stringify(publicKeyCredential),
+        // session: _options.
+    }).then(myResponse => {
+        var str = "";
+
+        writeOutText(str.concat("the response is: ", myResponse.result));
+    });
 
     return writeOutText(JSON.stringify(publicKeyCredential));
 
@@ -98,57 +102,29 @@ function _fetch(url, obj) {
 });
 };
 
-function prepareChallenge(challenge) {
-    encoded = b64EncodeUnicode(challenge)
-    return encoded.substring(0, encoded.length - 2)
-}
-
-function strToBin(str) {
-    return Uint8Array.from(atob(str), c => c.charCodeAt(0));
-}
-
-function b64EncodeUnicode(str) {
-    // first we use encodeURIComponent to get percent-encoded UTF-8,
-    // then we convert the percent encodings into raw bytes which
-    // can be fed into btoa.
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-        function toSolidBytes(match, p1) {
-            return String.fromCharCode('0x' + p1);
-        }));
-}
-
 function binToStr(bin) {
     return btoa(new Uint8Array(bin).reduce(
         (s, byte) => s + String.fromCharCode(byte), ''
     ));
 }
 
-function stringToByteArray(str) {
-    var ch, st, re = [];
-    for (var i = 0; i < str.length; i++ ) {
-        ch = str.charCodeAt(i);  // get char
-        st = [];                 // set up "stack"
-        do {
-            st.push( ch & 0xFF );  // push byte to stack
-            ch = ch >> 8;          // shift value down by 1 byte
-        }
-        while ( ch );
-        // add stack contents to result
-        // done because chars have "wrong" endianness
-        re = re.concat( st.reverse() );
-    }
-    // return an array of bytes
-    return re;
-}
-
 function str2ab(str) {
-    console.log(str);
-    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    var bufView = new Uint16Array(buf);
-    for (var i = 0, strLen = str.length; i < strLen; i++) {
-        bufView[i] = str.charCodeAt(i);
+
+    var bytes = [];
+
+    for (var i = 0; i < str.length; ++i) {
+        var code = str.charCodeAt(i);
+
+        bytes = bytes.concat([code]);
     }
-    return buf;
+
+    var uint8Array = new Uint8Array(bytes.length);
+    for(var j = 0; j < uint8Array.length; j++) {
+        uint8Array[j] = bytes[j];
+    }
+
+    return uint8Array;
+
 }
 
 function writeOutText(str) {

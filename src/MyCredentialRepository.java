@@ -1,7 +1,9 @@
+import Model.UserRecord;
 import com.yubico.webauthn.CredentialRepository;
 import com.yubico.webauthn.RegisteredCredential;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
+import database.UserRecordConnector;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -28,10 +30,12 @@ public class MyCredentialRepository implements CredentialRepository {
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String s) {
 
+        UserRecord userRecord = UserRecordConnector.findByUserName(s);
+
         Set mySet = new HashSet<PublicKeyCredentialDescriptor>();
 
         PublicKeyCredentialDescriptor myPk = PublicKeyCredentialDescriptor.builder()
-                .id(aliceAsByteAeeay)
+                .id(new ByteArray(userRecord.getUniqueName().getBytes()))
                 .build();
 
         mySet.add(myPk);
@@ -56,6 +60,9 @@ public class MyCredentialRepository implements CredentialRepository {
 
     @Override
     public Set<RegisteredCredential> lookupAll(ByteArray byteArray) {
-        return null;
+//        TODO actually return list of credentials
+        Set<RegisteredCredential> out = new HashSet<>();
+
+        return out;
     }
 }
