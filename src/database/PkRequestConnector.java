@@ -31,24 +31,24 @@ public class PkRequestConnector {
 
     }
 
-    public static void addRecord(String id, String json){
-        collection.insertOne(new PkRequestStore(id, json));
+    public static void addRecord(String requestId, String json){
+        collection.insertOne(new PkRequestStore(requestId, json));
     }
 
 //    public static void compareTwo(String challenge){
 //        PkRequestStore fist = collection.find().first();
 //
-//        System.out.println(Arrays.toString(fist.getId().getBytes()));
+//        System.out.println(Arrays.toString(fist.getRequestId().getBytes()));
 //
 //        System.out.println(Arrays.toString(challenge.getBytes()));
 //
-//        System.out.println("Are they the same? " + challenge.equals(fist.getId()));
+//        System.out.println("Are they the same? " + challenge.equals(fist.getRequestId()));
 //    }
 
-    public static String getRecord(String challenge){
-        PkRequestStore record = collection.find(eq("_id", challenge)).first();
+    public static PkRequestStore getRecord(String requestId){
+        PkRequestStore record = collection.find(eq("requestId", requestId)).first();
 
-        return record.getPkRequestAsJson();
+        return record;
     }
 
     public static void dropCollection(){

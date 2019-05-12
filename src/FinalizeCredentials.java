@@ -1,3 +1,4 @@
+import Model.PkRequestStore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Random;
+
+import static database.UserRecordConnector.generatUserHandle;
 
 public class FinalizeCredentials extends HttpServlet {
     @Override
@@ -23,14 +27,15 @@ public class FinalizeCredentials extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         try {
-            String data = req.getParameter("data");
+            String keyData = req.getParameter("keyData");
+            String userData = req.getParameter("userData");
 
-            data = data.replace('/','_');
-            data = data.replace('+','-');
+            keyData = keyData.replace('/','_');
+            keyData = keyData.replace('+','-');
 
-            System.out.println("Data is: " + data);
-            PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
-                    PublicKeyCredential.parseRegistrationResponseJson(data);
+            System.out.println("User data is: " + userData);
+            PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkcResponse =
+                    PublicKeyCredential.parseRegistrationResponseJson(keyData);
 
             ObjectMapper jsonMapper = new ObjectMapper()
                     .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
@@ -38,22 +43,24 @@ public class FinalizeCredentials extends HttpServlet {
                     .registerModule(new Jdk8Module());
 
 
-            ByteArray challengeEncoded = pkc.getResponse().getClientData().getChallenge();
+            ByteArray challengeEncoded = pkcResponse.getResponse().getClientData().getChallenge();
 
-            String pkRecord = recodeChallenge(PkRequestConnector.getRecord(new String(challengeEncoded.getBytes())));
+            PkRequestStore pkRecord = PkRequestConnector.getRecord(new String(challengeEncoded.getBytes()));
+            String pkRecordChallenge = recodeChallenge(pkRecord.getPkRequestAsJson());
 
-
-            PublicKeyCredentialCreationOptions pkcRequest = jsonMapper.readValue(pkRecord, PublicKeyCredentialCreationOptions.class);
+            PublicKeyCredentialCreationOptions pkcRequest = jsonMapper
+                    .readValue(pkRecordChallenge, PublicKeyCredentialCreationOptions.class);
 
             RegistrationResult result = RpInstance.rp.finishRegistration(FinishRegistrationOptions.builder()
                     .request(pkcRequest)
-                    .response(pkc)
+                    .response(pkcResponse)
                     .build());
 
-            UserRecordConnector.addRecord("alice@example.com", "Alice Wonder", result.getPublicKeyCose(), result.getKeyId());
+
+            UserRecordConnector.addRecord(generatUserHandle(),"alice@example.com", "Alice Wonder", result.getKeyId().getId(), result.getPublicKeyCose());
 
             resp.setContentType("application/json");
-            resp.getWriter().println("result:\"Success!\"");
+            resp.getWriter().println("{\"result\":\"Success!\"}");
 
 
         } catch (Exception e){
@@ -73,10 +80,6 @@ public class FinalizeCredentials extends HttpServlet {
         String challenge = input.substring(cutAtPosition, cutUntil);
         String lastPart = input.substring(cutUntil);
 
-//        System.out.println("First part: " + firstPart);
-//        System.out.println("Challenge: " + challenge);
-//        System.out.println("Last part: " + lastPart);
-
         ByteArray challengeByteArray = new ByteArray(challenge.getBytes());
         String challenge64 = challengeByteArray.getBase64Url();
 
@@ -84,6 +87,5 @@ public class FinalizeCredentials extends HttpServlet {
 
         return firstPart + challenge64 + lastPart;
     }
-
 
 }

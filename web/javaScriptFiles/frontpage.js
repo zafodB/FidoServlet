@@ -1,71 +1,86 @@
-document.getElementById("make-credential-button").addEventListener("click", registerNewCredential);
-
+window.onload=function(){
+    document.getElementById("make-credential-button").addEventListener("click", registerNewCredential);
+}
 
 function registerNewCredential() {
-    _fetch('/SecondFidoTest/DoABarrelRoll', {}).then(options => {
 
-        const makeCredentialOptions = {};
-    _options = options;
+    var email = document.getElementById("email").value;
 
-    // console.log(str2ab(options.user.id));
-    // console.log(str2ab(options.challenge));
+    if (email) {
+        document.getElementById("email").style.backgroundColor = "white";
 
-    makeCredentialOptions.rp = options.rp;
+        _fetch('/SecondFidoTest/DoABarrelRoll', {}).then(options => {
 
-    options.rp.id
+            const makeCredentialOptions = {};
+        _options = options;
 
-    makeCredentialOptions.user = options.user;
+        // console.log(str2ab(options.user.id));
+        // console.log(str2ab(options.challenge));
 
+        makeCredentialOptions.rp = options.rp;
 
-    makeCredentialOptions.user.id = str2ab(options.user.id);
-    makeCredentialOptions.challenge = str2ab(options.challenge);
-    makeCredentialOptions.pubKeyCredParams = options.pubKeyCredParams;
-
-    // console.log(makeCredentialOptions);
-
-    return navigator.credentials.create({
-        "publicKey": makeCredentialOptions
-    });
-
-    }).then(attestation => {
+        makeCredentialOptions.user = options.user;
 
 
-    const publicKeyCredential = {};
+        makeCredentialOptions.user.id = str2ab(options.user.id);
+        makeCredentialOptions.challenge = str2ab(options.challenge);
+        makeCredentialOptions.pubKeyCredParams = options.pubKeyCredParams;
 
-    if ('id' in attestation) {
-        publicKeyCredential.id = attestation.id;
-    }
-    if ('type' in attestation) {
-        publicKeyCredential.type = attestation.type;
-    }
-    if ('clientExtensionResults' in attestation) {
-        publicKeyCredential.clientExtensionResults = attestation.clientExtensionResults;
-    } else {
-        publicKeyCredential.clientExtensionResults = {};
-    }
-    if (!attestation.response) {
-        showErrorMsg("Make Credential response lacking 'response' attribute");
-    }
+        // console.log(makeCredentialOptions);
+
+        return navigator.credentials.create({
+            "publicKey": makeCredentialOptions
+        });
+
+    }).
+        then(attestation => {
 
 
-    const response = {};
-    response.clientDataJSON = binToStr(attestation.response.clientDataJSON);
-    response.attestationObject = binToStr(attestation.response.attestationObject);
+            const publicKeyCredential = {};
 
-    publicKeyCredential.response = response;
+        if ('id' in attestation) {
+            publicKeyCredential.id = attestation.id;
+        }
+        if ('type' in attestation) {
+            publicKeyCredential.type = attestation.type;
+        }
+        if ('clientExtensionResults' in attestation) {
+            publicKeyCredential.clientExtensionResults = attestation.clientExtensionResults;
+        } else {
+            publicKeyCredential.clientExtensionResults = {};
+        }
+        if (!attestation.response) {
+            showErrorMsg("Make Credential response lacking 'response' attribute");
+        }
 
-    return _fetch('/SecondFidoTest/DoATrick', {
-        data: JSON.stringify(publicKeyCredential),
-        // session: _options.
-    }).then(myResponse => {
-        var str = "";
+
+        const response = {};
+        response.clientDataJSON = binToStr(attestation.response.clientDataJSON);
+        response.attestationObject = binToStr(attestation.response.attestationObject);
+
+        publicKeyCredential.response = response;
+
+
+        return _fetch('/SecondFidoTest/DoATrick', {
+            keyData: JSON.stringify(publicKeyCredential),
+            userData: email
+        }).then(myResponse => {
+            var str = "";
 
         writeOutText(str.concat("the response is: ", myResponse.result));
-    });
+    })
+        ;
 
-    return writeOutText(JSON.stringify(publicKeyCredential));
+
+        return writeOutText(JSON.stringify(publicKeyCredential));
 
     })
+    }
+    else {
+        document.getElementById("email").style.backgroundColor = "red";
+
+        return writeOutText("Invalid email.");
+    }
 }
 
 function _fetch(url, obj) {
@@ -131,4 +146,9 @@ function writeOutText(str) {
     var newtext = document.createTextNode(str);
     var spanXyz = document.getElementById("outtext");
     spanXyz.appendChild(newtext);
+}
+
+function verifyEmail(){
+    var regex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+    return regex.test(email);
 }

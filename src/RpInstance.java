@@ -16,5 +16,4 @@ public class RpInstance {
                 .credentialRepository(new MyCredentialRepository())
                 .build();
     }
-
 }

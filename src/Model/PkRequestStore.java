@@ -2,24 +2,24 @@ package Model;
 
 public class PkRequestStore {
 
-    String id;
+    String requestId;
     String pkRequestAsJson;
 
     public PkRequestStore(){
 
     }
 
-    public PkRequestStore(String id, String pkRequestAsJson) {
-        this.id = id;
+    public PkRequestStore(String requestId, String pkRequestAsJson) {
+        this.requestId = requestId;
         this.pkRequestAsJson = pkRequestAsJson;
     }
 
-    public String getId() {
-        return id;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public void setId(final String id) {
-        this.id = id;
+    public void setRequestId(final String requestId) {
+        this.requestId = requestId;
     }
 
     public String getPkRequestAsJson() {
@@ -29,4 +29,5 @@ public class PkRequestStore {
     public void setPkRequestAsJson(final String pkRequestAsJson) {
         this.pkRequestAsJson = pkRequestAsJson;
     }
+
 }

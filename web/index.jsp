@@ -6,21 +6,43 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
-  <head>
+<head>
     <title>$Title$</title>
-  </head>
-  <body>
-  <button id="make-credential-button">
-            Do Magic
-  </button>
+</head>
 
-  <br/>
+<style>
+    .content {
+        max-width: 500px;
+        margin: auto;
+    }
+</style>
 
-  <span id="outtext">
+<script src="javaScriptFiles/frontpage.js"></script>
+
+<body>
+<div class="content">
+
+    E-mail:
+
+    <br>
+    <br>
+    <input type="email" id="email">
+
+    <br>
+    <br>
+    <button id="make-credential-button">
+        Register
+    </button>
+
+    <br>
+    <br>
+    <span id="outtext">
     This is empty.
-  </span>
+    </span>
 
-  <script src="javaScriptFiles/frontpage.js"></script>
-  </body>
+</div>
+
+</body>
 </html>

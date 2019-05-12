@@ -1,3 +1,4 @@
+import Model.RegisteredCredentialStore;
 import Model.UserRecord;
 import com.yubico.webauthn.CredentialRepository;
 import com.yubico.webauthn.RegisteredCredential;
@@ -14,8 +15,9 @@ import java.util.Set;
 
 public class MyCredentialRepository implements CredentialRepository {
 
-     byte[] originByteArray;
-     byte[] AliceUserBytes;
+    byte[] originByteArray;
+    byte[] AliceUserBytes;
+
     {
         try {
             originByteArray = "This Is alice in wonderland and I hope this text is long enough".getBytes("UTF-8");
@@ -28,34 +30,85 @@ public class MyCredentialRepository implements CredentialRepository {
     ByteArray aliceAsByteAeeay = new ByteArray(AliceUserBytes);
 
     @Override
-    public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String s) {
+    public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String userName) {
 
-        UserRecord userRecord = UserRecordConnector.findByUserName(s);
+        UserRecord userRecord = UserRecordConnector.findByUserName(userName);
 
-        Set mySet = new HashSet<PublicKeyCredentialDescriptor>();
+        Set<PublicKeyCredentialDescriptor> output = new HashSet<>();
 
-        PublicKeyCredentialDescriptor myPk = PublicKeyCredentialDescriptor.builder()
-                .id(new ByteArray(userRecord.getUniqueName().getBytes()))
-                .build();
+//        Set<PublicKeyCredentialDescriptor> output = new HashSet<>(sourceMap.values());
 
-        mySet.add(myPk);
+        if (userRecord != null) {
 
-        return mySet;
+            Set<String> keys = userRecord.getCredentials().keySet();
+
+            if (keys != null) {
+                for (String keyId : userRecord.getCredentials().keySet()) {
+
+                    RegisteredCredentialStore savedCredential = userRecord.getCredentials().get(keyId);
+
+                    RegisteredCredential credential = RegisteredCredential.builder()
+                            .credentialId(new ByteArray(savedCredential.getCredentialId().getBytes()))
+                            .userHandle(new ByteArray(savedCredential.getUserHandle().getBytes()))
+                            .publicKeyCose(new ByteArray(savedCredential.getPublicKeyCose().getBytes()))
+                            .build();
+
+                    PublicKeyCredentialDescriptor key =
+                            PublicKeyCredentialDescriptor.builder().id(credential.getCredentialId()).build();
+
+                    output.add(key);
+                }
+            }
+        }
+//        for (RegisteredCredential credential : userRecord.getCredentials()){
+//            PublicKeyCredentialDescriptor key =
+//                    PublicKeyCredentialDescriptor.builder().id(credential.getCredentialId())
+//                    .build();
+//
+//            output.add(key);
+//
+//        }
+
+        return output;
+
+//        PublicKeyCredentialDescriptor.builder().
+
+//        Set mySet = new HashSet<PublicKeyCredentialDescriptor>();
+
+//        PublicKeyCredentialDescriptor myPk = PublicKeyCredentialDescriptor.builder()
+//                .id(new ByteArray(userRecord.getUniqueName().getBytes()))
+//                .build();
+
+//        mySet.add(myPk);
+
+//        return mySet;
+//
+//
+//        getRegistrationsByUsername(username).stream()
+//                .map(registration -> PublicKeyCredentialDescriptor.builder()
+//                        .id(registration.getCredential().getCredentialId())
+//                        .build())
+//
+//
+//        return
+//                .collect(Collectors.toSet());
     }
 
     @Override
-    public Optional<ByteArray> getUserHandleForUsername(String s) {
+    public Optional<ByteArray> getUserHandleForUsername(String username) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<String> getUsernameForUserHandle(ByteArray byteArray) {
-        return Optional.empty();
+    public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
+        UserRecord record = UserRecordConnector.findByUserHandle(userHandle);
+        if (record != null) return Optional.of(record.getUniqueName());
+        else return Optional.empty();
     }
 
     @Override
-    public Optional<RegisteredCredential> lookup(ByteArray byteArray, ByteArray byteArray1) {
-        return Optional.empty();
+    public Optional<RegisteredCredential> lookup(ByteArray credentialId, ByteArray userHandle) {
+        return Optional.of(UserRecordConnector.findCredential(credentialId, userHandle));
     }
 
     @Override

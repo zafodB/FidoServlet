@@ -7,8 +7,10 @@ import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
 import com.yubico.webauthn.data.UserIdentity;
 import database.PkRequestConnector;
+import database.UserRecordConnector;
 
 import java.util.Arrays;
+import java.util.Random;
 import javax.servlet.http.*;
 
 public class FidoTestSecond extends HttpServlet {
@@ -21,27 +23,11 @@ public class FidoTestSecond extends HttpServlet {
         // Set the response message's MIME type
         response.setContentType("application/json");
 
-        byte[] originByteArray;
-        byte[] AliceUserBytes = null;
-        {
-            try {
-                originByteArray = "This Is alice in wonderland and I hope this text is long enough".getBytes("UTF-8");
-                AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 12);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-//        rp.getCredentialRepository().getCredentialIdsForUsername().
-
-        ByteArray aliceIdBytes = new ByteArray(AliceUserBytes);
-
         PublicKeyCredentialCreationOptions pkrequest = RpInstance.rp.startRegistration(StartRegistrationOptions.builder()
                 .user(UserIdentity.builder()
-                        .name("alice")
+                        .name("alice@example.com")
                         .displayName("Alice Hypothetical")
-                        .id(aliceIdBytes)
+                        .id(UserRecordConnector.generatUserHandle())
                         .build())
                 .build());
 

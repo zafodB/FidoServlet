@@ -1,42 +1,38 @@
 package Model;
 
+import com.yubico.webauthn.RegisteredCredential;
 import com.yubico.webauthn.RegistrationResult;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 
+import java.util.Map;
+import java.util.Set;
+
 public class UserRecord {
 
-    public UserRecord(){}
-
-    public UserRecord(String uniqueName, String displayName, ByteArray publicKeyCose, PublicKeyCredentialDescriptor publicKeyDescriptor){
-        this.uniqueName = uniqueName;
-        this.displayName = displayName;
-        this.publicKeyCose = publicKeyCose;
-        this.publicKeyDescriptor = publicKeyDescriptor;
-    }
-
+    private String userHandle;
     private String uniqueName;
-
     private String displayName;
 
-    private ByteArray publicKeyCose;
+    private Map<String, RegisteredCredentialStore> credentials;
 
-    private PublicKeyCredentialDescriptor publicKeyDescriptor;
-
-    public ByteArray getPublicKeyCose() {
-        return publicKeyCose;
+    public UserRecord() {
     }
 
-    public void setPublicKeyCose(ByteArray publicKeyCose) {
-        this.publicKeyCose = publicKeyCose;
+    public UserRecord(String userHandle, String uniqueName, String displayName, Map<String, RegisteredCredentialStore> credentials) {
+
+        this.userHandle = userHandle;
+        this.uniqueName = uniqueName;
+        this.displayName = displayName;
+        this.credentials = credentials;
     }
 
-    public PublicKeyCredentialDescriptor getPublicKeyDescriptor() {
-        return publicKeyDescriptor;
+    public String getUserHandle() {
+        return userHandle;
     }
 
-    public void setPublicKeyDescriptor(PublicKeyCredentialDescriptor publicKeyDescriptor) {
-        this.publicKeyDescriptor = publicKeyDescriptor;
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
     }
 
     public String getUniqueName() {
@@ -55,5 +51,12 @@ public class UserRecord {
         this.displayName = displayName;
     }
 
+    public Map<String, RegisteredCredentialStore> getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Map<String, RegisteredCredentialStore> credentials) {
+        this.credentials = credentials;
+    }
 }
 
