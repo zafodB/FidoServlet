@@ -89,3 +89,5 @@ public class FinalizeCredentials extends HttpServlet {
     }
 
 }
+
+//TODO pass email to database

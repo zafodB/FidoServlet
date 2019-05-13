@@ -34,6 +34,16 @@
         <url-pattern>/DoATrick</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SigninServlet</servlet-name>
+        <servlet-class>BeginSignIn</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SigninServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
     <context-param>
         <param-name>MONGODB_HOST</param-name>
         <param-value>localhost</param-value>

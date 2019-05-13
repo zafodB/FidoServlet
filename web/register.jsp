@@ -9,7 +9,7 @@
 
 <html>
 <head>
-    <title>FIDO demo: Sign-in</title>
+    <title>$Title$</title>
 </head>
 
 <style>
@@ -19,7 +19,7 @@
     }
 </style>
 
-<script src="javaScriptFiles/signinPage.js"></script>
+<script src="javaScriptFiles/registerPage.js"></script>
 
 <body>
 <div class="content">
@@ -32,8 +32,8 @@
 
     <br>
     <br>
-    <button id="sign-in-button">
-        Sign-in
+    <button id="make-credential-button">
+        Register
     </button>
 
     <br>
