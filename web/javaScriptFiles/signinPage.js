@@ -1,6 +1,6 @@
 window.onload = function () {
     document.getElementById("sign-in-button").addEventListener("click", registerNewCredential);
-}
+};
 
 function registerNewCredential() {
 
@@ -9,72 +9,84 @@ function registerNewCredential() {
     if (verifyEmail(email)) {
         document.getElementById("email").style.backgroundColor = "white";
 
-        let _parameters;
-        _fetch('/SecondFidoTest/signin', {}).then(parameters => {
+        // let _parameters;
+        _fetch('/SecondFidoTest/signin', {
+            userData: email
+        }).then(parameters => {
 
-                const requestOptions = {};
-                _parameters = parameters;
+            const requestOptions = {};
+            // _parameters = parameters;
+            let requestDetails = parameters.publicKeyCredentialRequestOptions;
 
-                requestOptions.challenge = str2ab(parameters.challenge);
-                if ('timeout' in parameters) {
-                    requestOptions.timeout = parameters.timeout;
-                }
-                if ('rpId' in parameters) {
-                    requestOptions.rpId = parameters.rpId;
-                }
-                if ('allowCredentials' in parameters) {
-                    requestOptions.allowCredentials = credentialListConversion(parameters.allowCredentials);
-                }
+            requestOptions.challenge = str2ab(requestDetails.challenge);
+            if ('timeout' in requestDetails) {
+                requestOptions.timeout = requestDetails.timeout;
+            }
+            if ('rpId' in requestDetails) {
+                requestOptions.rpId = requestDetails.rpId;
+            }
+            if ('allowCredentials' in requestDetails) {
+                requestOptions.allowCredentials = credentialListConversion(requestDetails.allowCredentials);
+            }
 
-                console.log(requestOptions);
+            // requestOptions.allowCredentials = {};
 
-                return navigator.credentials.get({
-                    "publicKey": requestOptions
-                });
+            console.log(requestOptions);
 
-            }).then(assertion => {
-                const publicKeyCredential = {};
+            return navigator.credentials.get({
+                "publicKey": requestOptions
+            });
 
-                if ('id' in assertion) {
-                    publicKeyCredential.id = assertion.id;
-                }
-                if ('type' in assertion) {
-                    publicKeyCredential.type = assertion.type;
-                }
-                if ('rawId' in assertion) {
-                    publicKeyCredential.rawId = binToStr(assertion.rawId);
-                }
-                if (!assertion.response) {
-                    throw "Get assertion response lacking 'response' attribute";
-                }
+        }).then(assertion => {
+            const publicKeyCredential = {};
 
-                const _response = assertion.response;
+            if ('id' in assertion) {
+                publicKeyCredential.id = assertion.id;
+            }
+            if ('type' in assertion) {
+                publicKeyCredential.type = assertion.type;
+            }
+            if ('clientExtensionResults' in assertion) {
+                publicKeyCredential.clientExtensionResults = assertion.clientExtensionResults;
+            } else {
+                publicKeyCredential.clientExtensionResults = {};
+            }
+            if (!assertion.response) {
+                throw "Get assertion response lacking 'response' attribute";
+            }
 
-                publicKeyCredential.response = {
-                    clientDataJSON:     binToStr(_response.clientDataJSON),
-                    authenticatorData:  binToStr(_response.authenticatorData),
-                    signature:          binToStr(_response.signature),
-                    userHandle:         binToStr(_response.userHandle)
-                };
+            const _response = assertion.response;
 
-                //TODO finish this up
-                return _fetch('/FinishGetAssertion', {
-                    data: JSON.stringify(publicKeyCredential),
-                    session: _parameters.session.id
-                });
+            publicKeyCredential.response = {
+                clientDataJSON: binToStr(_response.clientDataJSON),
+                authenticatorData: binToStr(_response.authenticatorData),
+                signature: binToStr(_response.signature),
+            };
 
-            }).then(result => {
-                console.log(result);
+            return _fetch('/SecondFidoTest/signinfinish', {
+                data: JSON.stringify(publicKeyCredential),
+                // session: _parameters.session.id
+            });
 
-                if (result && result.success) {
-                    //TODO Do some fancy shit when they log in.
+        }).then(result => {
 
-                    // let tmpName = $('#username-text').value;
-                    // $('#instructions').textContent = 'Thanks, ' + tmpName + '! Login was a success.';
-                    // hide('#auth-spinner');
-                }
-            }).catch(err => {
-            //TODO handle error
+                var str = "";
+
+                writeOutText(str.concat("the response is: ", result.result));
+                // console.log(result);
+                //
+                // if (result && result.success) {
+                //     console.log("Successfully signed in.")//TODO Do some fancy shit when they log in.
+                //
+                //     // let tmpName = $('#username-text').value;
+                //     // $('#instructions').textContent = 'Thanks, ' + tmpName + '! Login was a success.';
+                //     // hide('#auth-spinner');
+                // }
+            }
+        )
+
+            .catch(err => {
+                console.log(err.toString())
             });
 
     } else {
@@ -140,7 +152,30 @@ function str2ab(str) {
     }
 
     return uint8Array;
+}
 
+function str3ab(str) {
+    return Uint8Array.from(atob(str), c => c.charCodeAt(0));
+}
+
+function credentialListConversion(list) {
+    return list.map(item => {
+
+        let decodedId = atob(item.id);
+        decodedId = decodedId.replace('=', '');
+        decodedId = decodedId.replace('=', '');
+
+        let outputId = str3ab(decodedId);
+
+        const cred = {
+            type: item.type,
+            id: outputId
+        };
+        if (item.transports) {
+            cred.transports = list.transports;
+        }
+        return cred;
+    });
 }
 
 function writeOutText(str) {

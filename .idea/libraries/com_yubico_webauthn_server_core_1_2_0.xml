@@ -22,6 +22,8 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/webauthn-server-core-1.2.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

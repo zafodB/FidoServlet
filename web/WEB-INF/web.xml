@@ -35,13 +35,23 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>SigninServlet</servlet-name>
+        <servlet-name>SigninServletStart</servlet-name>
         <servlet-class>BeginSignIn</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>SigninServlet</servlet-name>
+        <servlet-name>SigninServletStart</servlet-name>
         <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SigninServletFinish</servlet-name>
+        <servlet-class>FinishSignIn</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SigninServletFinish</servlet-name>
+        <url-pattern>/signinfinish</url-pattern>
     </servlet-mapping>
 
     <context-param>

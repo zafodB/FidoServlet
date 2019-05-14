@@ -15,28 +15,12 @@ import java.util.Set;
 
 public class MyCredentialRepository implements CredentialRepository {
 
-    byte[] originByteArray;
-    byte[] AliceUserBytes;
-
-    {
-        try {
-            originByteArray = "This Is alice in wonderland and I hope this text is long enough".getBytes("UTF-8");
-            AliceUserBytes = Arrays.copyOfRange(originByteArray, 0, 1);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    ByteArray aliceAsByteAeeay = new ByteArray(AliceUserBytes);
-
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String userName) {
 
         UserRecord userRecord = UserRecordConnector.findByUserName(userName);
 
         Set<PublicKeyCredentialDescriptor> output = new HashSet<>();
-
-//        Set<PublicKeyCredentialDescriptor> output = new HashSet<>(sourceMap.values());
 
         if (userRecord != null) {
 
@@ -60,43 +44,14 @@ public class MyCredentialRepository implements CredentialRepository {
                 }
             }
         }
-//        for (RegisteredCredential credential : userRecord.getCredentials()){
-//            PublicKeyCredentialDescriptor key =
-//                    PublicKeyCredentialDescriptor.builder().id(credential.getCredentialId())
-//                    .build();
-//
-//            output.add(key);
-//
-//        }
-
         return output;
-
-//        PublicKeyCredentialDescriptor.builder().
-
-//        Set mySet = new HashSet<PublicKeyCredentialDescriptor>();
-
-//        PublicKeyCredentialDescriptor myPk = PublicKeyCredentialDescriptor.builder()
-//                .id(new ByteArray(userRecord.getUniqueName().getBytes()))
-//                .build();
-
-//        mySet.add(myPk);
-
-//        return mySet;
-//
-//
-//        getRegistrationsByUsername(username).stream()
-//                .map(registration -> PublicKeyCredentialDescriptor.builder()
-//                        .id(registration.getCredential().getCredentialId())
-//                        .build())
-//
-//
-//        return
-//                .collect(Collectors.toSet());
     }
 
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
-        return Optional.empty();
+        UserRecord record = UserRecordConnector.findByUserName(username);
+        if (record != null) return Optional.of(new ByteArray(record.getUserHandle().getBytes()));
+        else return Optional.empty();
     }
 
     @Override

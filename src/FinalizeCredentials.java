@@ -57,7 +57,7 @@ public class FinalizeCredentials extends HttpServlet {
                     .build());
 
 
-            UserRecordConnector.addRecord(generatUserHandle(),"alice@example.com", "Alice Wonder", result.getKeyId().getId(), result.getPublicKeyCose());
+            UserRecordConnector.addRecord(generatUserHandle(), userData, "Alice Wonder", result.getKeyId().getId(), result.getPublicKeyCose());
 
             resp.setContentType("application/json");
             resp.getWriter().println("{\"result\":\"Success!\"}");
@@ -75,17 +75,7 @@ public class FinalizeCredentials extends HttpServlet {
         int cutAtPosition = input.lastIndexOf("\"challenge\":\"") + 13;
         int cutUntil = input.lastIndexOf("\",\"pubKeyCredParams\"");
 
-        System.out.println("JSON input is: " + input);
-        String firstPart = input.substring(0, cutAtPosition);
-        String challenge = input.substring(cutAtPosition, cutUntil);
-        String lastPart = input.substring(cutUntil);
-
-        ByteArray challengeByteArray = new ByteArray(challenge.getBytes());
-        String challenge64 = challengeByteArray.getBase64Url();
-
-        System.out.println("JSON output is: " + firstPart + challenge64 + lastPart);
-
-        return firstPart + challenge64 + lastPart;
+        return RpInstance.recode(cutAtPosition, cutUntil, input);
     }
 
 }
