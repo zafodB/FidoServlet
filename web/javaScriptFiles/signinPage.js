@@ -64,15 +64,13 @@ function registerNewCredential() {
             };
 
             return _fetch('/SecondFidoTest/signinfinish', {
-                data: JSON.stringify(publicKeyCredential),
+                data: JSON.stringify(publicKeyCredential)
                 // session: _parameters.session.id
-            });
+            })
 
-        }).then(result => {
-
+        }).then(myResponse => {
                 var str = "";
-
-                writeOutText(str.concat("the response is: ", result.result));
+                writeOutText(str.concat("the response is: ", myResponse.result));
                 // console.log(result);
                 //
                 // if (result && result.success) {
@@ -83,11 +81,9 @@ function registerNewCredential() {
                 //     // hide('#auth-spinner');
                 // }
             }
-        )
-
-            .catch(err => {
-                console.log(err.toString())
-            });
+        ).catch(err => {
+            console.log(err.toString())
+        });
 
     } else {
         document.getElementById("email").style.backgroundColor = "red";
@@ -128,7 +124,7 @@ function _fetch(url, obj) {
             throw response.statusText;
         }
     });
-};
+}
 
 function binToStr(bin) {
     return btoa(new Uint8Array(bin).reduce(
@@ -154,18 +150,12 @@ function str2ab(str) {
     return uint8Array;
 }
 
-function str3ab(str) {
-    return Uint8Array.from(atob(str), c => c.charCodeAt(0));
-}
-
 function credentialListConversion(list) {
     return list.map(item => {
 
-        let decodedId = atob(item.id);
-        decodedId = decodedId.replace('=', '');
-        decodedId = decodedId.replace('=', '');
+        // let decodedId = atob(item.id);
 
-        let outputId = str3ab(decodedId);
+        let outputId = Base64Binary.decodeArrayBuffer(item.id);
 
         const cred = {
             type: item.type,

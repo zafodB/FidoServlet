@@ -19,6 +19,7 @@
     }
 </style>
 
+<script src="javaScriptFiles/decoder.js"></script>
 <script src="javaScriptFiles/signinPage.js"></script>
 
 <body>

@@ -6,8 +6,6 @@ import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 import database.UserRecordConnector;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,15 +24,15 @@ public class MyCredentialRepository implements CredentialRepository {
 
             Set<String> keys = userRecord.getCredentials().keySet();
 
-            if (keys != null) {
+            if (!keys.isEmpty()) {
                 for (String keyId : userRecord.getCredentials().keySet()) {
 
                     RegisteredCredentialStore savedCredential = userRecord.getCredentials().get(keyId);
 
                     RegisteredCredential credential = RegisteredCredential.builder()
-                            .credentialId(new ByteArray(savedCredential.getCredentialId().getBytes()))
-                            .userHandle(new ByteArray(savedCredential.getUserHandle().getBytes()))
-                            .publicKeyCose(new ByteArray(savedCredential.getPublicKeyCose().getBytes()))
+                            .credentialId(ByteArray.fromBase64(savedCredential.getCredentialId()))
+                            .userHandle(ByteArray.fromBase64(savedCredential.getUserHandle()))
+                            .publicKeyCose(ByteArray.fromBase64(savedCredential.getPublicKeyCose()))
                             .build();
 
                     PublicKeyCredentialDescriptor key =
@@ -50,7 +48,7 @@ public class MyCredentialRepository implements CredentialRepository {
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
         UserRecord record = UserRecordConnector.findByUserName(username);
-        if (record != null) return Optional.of(new ByteArray(record.getUserHandle().getBytes()));
+        if (record != null) return Optional.of(ByteArray.fromBase64(record.getUserHandle()));
         else return Optional.empty();
     }
 

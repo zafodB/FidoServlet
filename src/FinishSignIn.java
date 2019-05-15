@@ -21,14 +21,14 @@ import java.io.IOException;
 
 public class FinishSignIn extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         doPost(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        System.out.println("The entire request is: " + req.getParameter("data"));
+        System.out.println("The entire response is: " + req.getParameter("data"));
 
         String responseData = recodeSignature(req.getParameter("data"));
         responseData = recodeCredentialId(responseData);
@@ -37,12 +37,15 @@ public class FinishSignIn extends HttpServlet {
 
         System.out.println("Response data is: " + responseData);
 
-        PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc =
-                PublicKeyCredential.parseAssertionResponseJson(responseData);
 
 //        TODO proper error handling
 
-        try{
+        try {
+            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc =
+                    PublicKeyCredential.parseAssertionResponseJson(responseData);
+
+            System.out.println("Successuflly parsed the JSON");
+
 
             System.out.println("Challenge from PKC request is: " + new String(pkc.getResponse().getClientData().getChallenge().getBytes()));
 
@@ -51,6 +54,7 @@ public class FinishSignIn extends HttpServlet {
             String requestAsJson = requestStore.getSigninRequestAsJson();
             System.out.println("Request is: " + requestAsJson);
 
+            String recodedRequest = recodeChallenge(requestAsJson);
 
 
             ObjectMapper jsonMapper = new ObjectMapper()
@@ -58,7 +62,7 @@ public class FinishSignIn extends HttpServlet {
                     .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
                     .registerModule(new Jdk8Module());
 
-            AssertionRequest request = jsonMapper.readValue(requestAsJson, AssertionRequest.class);
+            AssertionRequest request = jsonMapper.readValue(recodedRequest, AssertionRequest.class);
 
             AssertionResult result = RpInstance.rp.finishAssertion(FinishAssertionOptions.builder()
                     .request(request)
@@ -67,27 +71,44 @@ public class FinishSignIn extends HttpServlet {
 
             if (result.isSuccess()) {
                 System.out.println("SUCCESS!");
+                resp.setContentType("application/json");
                 resp.getWriter().println("{\"result\":\"Success!\"}");
 //                return result.getUsername();
+            } else {
+                resp.getWriter().println("{\"result\":\"Not successful.\"}");
             }
-
-            resp.getWriter().println("{\"result\":\"Not successful.\"}");
         } catch (Exception e) {
-            resp.getWriter().println("{\"result\":\""+ e.getMessage() +"\"}");
+
+            System.out.println("WTF!");
+            resp.getWriter().println("{\"result\":\"" + e.getMessage() + "\"}");
             e.printStackTrace();
         }
     }
 
-    private String recodeSignature(String input){
-        int cutAtPosition = input.lastIndexOf("\"signature\":\"") + 13;
-        int cutUntil = input.length() - 3;
+    private String recodeSignature(String input) {
 
-        return RpInstance.recode(cutAtPosition, cutUntil, input);
+        String output = input.replace("+", "-");
+        output = output.replace("/", "_");
+
+        return output;
+
+//        int cutAtPosition = input.lastIndexOf("\"signature\":\"") + 13;
+//        int cutUntil = input.length() - 3;
+//
+//        return RpInstance.recode(cutAtPosition, cutUntil, input);
     }
 
-    private String recodeCredentialId(String input){
-        int cutAtPosition = input.lastIndexOf("{\"id\":\"") + 8;
-        int cutUntil = input.lastIndexOf("\",\"type\"");
+    private String recodeCredentialId(String input) {
+        return input;
+//        int cutAtPosition = input.lastIndexOf("{\"id\":\"") + 7;
+//        int cutUntil = input.lastIndexOf("\",\"type\"");
+//
+//        return RpInstance.recode(cutAtPosition, cutUntil, input);
+    }
+
+    private String recodeChallenge(String input) {
+        int cutAtPosition = input.lastIndexOf("\":{\"challenge\":\"") + 16;
+        int cutUntil = input.lastIndexOf("\",\"rpId\"");
 
         return RpInstance.recode(cutAtPosition, cutUntil, input);
     }

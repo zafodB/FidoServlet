@@ -83,13 +83,23 @@ public class UserRecordConnector {
     }
 
     public static RegisteredCredential findCredential(ByteArray credentialId, ByteArray userHandle){
-        UserRecord record = collection.find(eq("userHandle", userHandle)).first();
+        System.out.println();
+        String databaseQueryUser = userHandle.getBase64();
+        String databaseQueryCredential = credentialId.getBase64();
 
-        RegisteredCredentialStore storedCredential = record.getCredentials().get(credentialId.getBase64());
+        System.out.println("Database query credentials: " + databaseQueryCredential);
+        System.out.println("Database query userHandle : " + databaseQueryUser);
+
+
+        UserRecord record = collection.find(eq("userHandle", databaseQueryUser)).first();
+
+
+
+        RegisteredCredentialStore storedCredential = record.getCredentials().get(databaseQueryCredential);
 
         return RegisteredCredential.builder().credentialId(credentialId)
-                .userHandle(new ByteArray(storedCredential.getUserHandle().getBytes()))
-                .publicKeyCose(new ByteArray(storedCredential.getPublicKeyCose().getBytes()))
+                .userHandle(ByteArray.fromBase64(storedCredential.getUserHandle()))
+                .publicKeyCose(ByteArray.fromBase64(storedCredential.getPublicKeyCose()))
                 .build();
     }
 

@@ -21,7 +21,7 @@ public class BeginSignIn extends HttpServlet {
 
         String userEmail = req.getParameter("userData");
 
-        System.out.println("User email was extracted and is: " + userEmail);
+//        System.out.println("User email was extracted and is: " + userEmail);
 
 //        TODO break the process if email is unknown.
         AssertionRequest request = RpInstance.rp.startAssertion(StartAssertionOptions.builder()

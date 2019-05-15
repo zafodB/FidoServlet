@@ -60,13 +60,11 @@ function registerNewCredential() {
             })
         }).catch(reason => {
             console.log(reason);
-        })
 
-            .then(myResponse => {
-                var str = "";
-
-                writeOutText(str.concat("the response is: ", myResponse.result));
-            });
+        }).then(myResponse => {
+            var str = "";
+            writeOutText(str.concat("the response is: ", myResponse.result));
+        });
 
     } else {
         document.getElementById("email").style.backgroundColor = "red";
@@ -107,7 +105,7 @@ function _fetch(url, obj) {
             throw response.statusText;
         }
     });
-};
+}
 
 function binToStr(bin) {
     return btoa(new Uint8Array(bin).reduce(

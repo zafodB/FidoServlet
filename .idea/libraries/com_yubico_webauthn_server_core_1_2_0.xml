@@ -24,6 +24,7 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.ideaLibSources/webauthn-server-core-1.2.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.ideaLibSources/guava-19.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
