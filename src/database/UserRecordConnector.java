@@ -94,6 +94,12 @@ public class UserRecordConnector {
         return record;
     }
 
+    public static boolean doesUserNameExist(String uniqueName){
+        UserRecordStore record = collection.find(eq(DatabaseReference.USER_RECORD_PARAMETER_UNIQUENAME, uniqueName)).first();
+
+        return record != null;
+    }
+
     /**
      * Retireve user record from the database by the user handle.
      *

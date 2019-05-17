@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="org.pac4j:j2e-pac4j:4.1.0" type="repository">
-    <properties maven-id="org.pac4j:j2e-pac4j:4.1.0" />
+  <library name="org.pac4j:j2e-pac4j:4.1.0">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/pac4j/j2e-pac4j/4.1.0/j2e-pac4j-4.1.0.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/pac4j/pac4j-core/3.3.0/pac4j-core-3.3.0.jar!/" />

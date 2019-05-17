@@ -5,11 +5,15 @@ window.onload = function () {
 function registerNewCredential() {
 
     var email = document.getElementById("email").value;
+    var name = document.getElementById("userDisplayName").value;
 
-    if (verifyEmail(email)) {
+    if (verifyEmail(email) && name.length != 0) {
         document.getElementById("email").style.backgroundColor = "white";
 
-        _fetch('/SecondFidoTest/DoABarrelRoll', {}).then(options => {
+        _fetch('/AAFidoServer/begin-registration', {
+            uniqueName: email,
+            displayName: name
+        }).then(options => {
 
             const makeCredentialOptions = {};
             _options = options;
@@ -27,8 +31,11 @@ function registerNewCredential() {
                 "publicKey": makeCredentialOptions
             });
 
-        }).then(attestation => {
-
+        }).catch(message => {
+            writeOutText(message);
+            throw message;
+            }
+        ).then(attestation => {
 
             const publicKeyCredential = {};
 
@@ -54,22 +61,25 @@ function registerNewCredential() {
             publicKeyCredential.response = response;
 
 
-            return _fetch('/SecondFidoTest/DoATrick', {
+            return _fetch('/AAFidoServer/finish-registration', {
                 keyData: JSON.stringify(publicKeyCredential),
                 userData: email
             })
         }).catch(reason => {
-            console.log(reason);
-
-        }).then(myResponse => {
+            writeOutText(reason);
+            throw reason;
+            }
+        ).then(myResponse => {
             var str = "";
             writeOutText(str.concat("the response is: ", myResponse.result));
+        }).catch(reason => {
+            writeOutText(reason);
         });
 
     } else {
         document.getElementById("email").style.backgroundColor = "red";
 
-        return writeOutText("Invalid email.");
+        return writeOutText("Invalid email or user name.");
     }
 }
 
@@ -101,6 +111,9 @@ function _fetch(url, obj) {
         if (response.status === 200) {
             // console.log(response.body)
             return response.json();
+        } else if (response.status === 409) {
+
+            throw "Email already exists.";
         } else {
             throw response.statusText;
         }

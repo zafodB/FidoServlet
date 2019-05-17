@@ -1,3 +1,5 @@
+/* Made by Filip Adamik on 17/05/2019 */
+
 window.onload = function () {
     document.getElementById("sign-in-button").addEventListener("click", registerNewCredential);
 };
@@ -10,7 +12,7 @@ function registerNewCredential() {
         document.getElementById("email").style.backgroundColor = "white";
 
         // let _parameters;
-        _fetch('/SecondFidoTest/signin', {
+        _fetch('/AAFidoServer/begin-signin', {
             userData: email
         }).then(parameters => {
 
@@ -28,8 +30,6 @@ function registerNewCredential() {
             if ('allowCredentials' in requestDetails) {
                 requestOptions.allowCredentials = credentialListConversion(requestDetails.allowCredentials);
             }
-
-            // requestOptions.allowCredentials = {};
 
             console.log(requestOptions);
 
@@ -63,7 +63,7 @@ function registerNewCredential() {
                 signature: binToStr(_response.signature),
             };
 
-            return _fetch('/SecondFidoTest/signinfinish', {
+            return _fetch('/AAFidoServer/finish-signin', {
                 data: JSON.stringify(publicKeyCredential)
                 // session: _parameters.session.id
             })

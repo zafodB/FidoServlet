@@ -1,9 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: filip
-  Date: 22/04/2019
-  Time: 14:39
-  To change this template use File | Settings | File Templates.
+Made by Filip Adamik on 17/05/2019
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -24,8 +20,14 @@
 <body>
 <div class="content">
 
-    E-mail:
+    Name:
+    <br>
+    <br>
+    <input type="text" id="userDisplayName">
 
+    <br>
+    <br>
+    E-mail:
     <br>
     <br>
     <input type="email" id="email">

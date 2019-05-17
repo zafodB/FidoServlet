@@ -1,18 +1,22 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="SecondFidoTest:war">
-    <output-path>$PROJECT_DIR$/out/artifacts/SecondFidoTest_war</output-path>
-    <root id="archive" name="SecondFidoTest.war">
-      <element id="artifact" artifact-name="SecondFidoTest:war exploded" />
+  <artifact type="war" name="AAFidoServer:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/AAFidoServer_war</output-path>
+    <root id="archive" name="AAFidoServer.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="lib">
           <element id="library" level="project" name="org.pac4j:j2e-pac4j:4.1.0" />
           <element id="library" level="project" name="org.mongodb:mongodb-driver-sync:3.9.0" />
           <element id="library" level="project" name="com.yubico:webauthn-server-core:1.2.0" />
         </element>
+        <element id="directory" name="classes">
+          <element id="module-output" name="AAFidoServer" />
+        </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/web" />
       </element>
       <element id="directory" name="javaScriptFiles">
         <element id="dir-copy" path="$PROJECT_DIR$/web/javaScriptFiles" />
       </element>
+      <element id="artifact" artifact-name="AAFidoServer:war exploded" />
     </root>
   </artifact>
 </component>

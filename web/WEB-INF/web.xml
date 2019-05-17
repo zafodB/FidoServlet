@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Made by Filip Adamik on 17/05/2019 -->
+
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
@@ -6,7 +8,7 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>SecondFidoTest</web-resource-name>
+            <web-resource-name>AAFidoServer</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <user-data-constraint>
@@ -15,43 +17,43 @@
     </security-constraint>
 
     <servlet>
-        <servlet-name>FidoTestSecond</servlet-name>
-        <servlet-class>FidoTestSecond</servlet-class>
+        <servlet-name>BeginRegistration</servlet-name>
+        <servlet-class>BeginRegistrationProcedure</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FidoTestSecond</servlet-name>
-        <url-pattern>/DoABarrelRoll</url-pattern>
+        <servlet-name>BeginRegistration</servlet-name>
+        <url-pattern>/begin-registration</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>FinalizeCredentials</servlet-name>
-        <servlet-class>FinalizeCredentials</servlet-class>
+        <servlet-name>FinishRegistration</servlet-name>
+        <servlet-class>FinishRegistrationProcedure</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FinalizeCredentials</servlet-name>
-        <url-pattern>/DoATrick</url-pattern>
+        <servlet-name>FinishRegistration</servlet-name>
+        <url-pattern>/finish-registration</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>SigninServletStart</servlet-name>
-        <servlet-class>BeginSignIn</servlet-class>
+        <servlet-name>BeginSignIn</servlet-name>
+        <servlet-class>BeginSignInProcedure</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>SigninServletStart</servlet-name>
-        <url-pattern>/signin</url-pattern>
+        <servlet-name>BeginSignIn</servlet-name>
+        <url-pattern>/begin-signin</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>SigninServletFinish</servlet-name>
-        <servlet-class>FinishSignIn</servlet-class>
+        <servlet-class>FinishSignInProcedure</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>SigninServletFinish</servlet-name>
-        <url-pattern>/signinfinish</url-pattern>
+        <url-pattern>/finish-signin</url-pattern>
     </servlet-mapping>
 
     <context-param>

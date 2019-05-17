@@ -14,7 +14,7 @@ public class RpInstance {
 
         rp = RelyingParty.builder()
                 .identity(rpIdentity)
-                .credentialRepository(new MyCredentialRepository())
+                .credentialRepository(new CredentialRepositoryConnector())
                 .build();
     }
 
