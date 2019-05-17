@@ -31,11 +31,7 @@ function registerNewCredential() {
                 "publicKey": makeCredentialOptions
             });
 
-        }).catch(message => {
-            writeOutText(message);
-            throw message;
-            }
-        ).then(attestation => {
+        }).then(attestation => {
 
             const publicKeyCredential = {};
 
@@ -63,13 +59,10 @@ function registerNewCredential() {
 
             return _fetch('/AAFidoServer/finish-registration', {
                 keyData: JSON.stringify(publicKeyCredential),
-                userData: email
+                userUniqueName: email,
+                userDisplayName: name
             })
-        }).catch(reason => {
-            writeOutText(reason);
-            throw reason;
-            }
-        ).then(myResponse => {
+        }).then(myResponse => {
             var str = "";
             writeOutText(str.concat("the response is: ", myResponse.result));
         }).catch(reason => {
@@ -109,11 +102,11 @@ function _fetch(url, obj) {
         body: body
     }).then(response => {
         if (response.status === 200) {
-            // console.log(response.body)
             return response.json();
         } else if (response.status === 409) {
-
             throw "Email already exists.";
+        } else if (response.status === 403) {
+            throw "The Registration Request Record was not found in the database or the response doesn't match.";
         } else {
             throw response.statusText;
         }

@@ -17,6 +17,15 @@
     </security-constraint>
 
     <servlet>
+        <servlet-name>RegisterPage</servlet-name>
+        <jsp-file>/register.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterPage</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>BeginRegistration</servlet-name>
         <servlet-class>BeginRegistrationProcedure</servlet-class>
     </servlet>

@@ -2,7 +2,6 @@
 
 package database;
 
-import Model.RegisteredCredentialStore;
 import Model.RegistrationRequestStore;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -55,9 +54,9 @@ public class RegistrationRequestConnector {
 
         if (request == null){
             throw new DatabaseException("The request was not found in the database.");
+        } else {
+            return request;
         }
-
-        return  request;
     }
 
     /**

@@ -25,7 +25,6 @@ public class BeginRegistrationProcedure extends HttpServlet {
      * @param request  Request contains email address (unique name) and user name (display name) chosen by the user.
      * @param response Response contains the registration request as JSON. Alternatively, if the unique name already
      *                 exists in the database, the response carries code 409 and a description of the error.
-     * @throws java.io.IOException
      */
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws java.io.IOException {
 
@@ -35,7 +34,7 @@ public class BeginRegistrationProcedure extends HttpServlet {
         response.setContentType("application/json");
 
 //        Check if username exists in the database.
-        if (UserRecordConnector.doesUserNameExist(uniqueUserName)) {
+        if (UserRecordConnector.userNameExists(uniqueUserName)) {
 //            response.getWriter().println("{\"result\":\"Email already registered!\"}");
             response.sendError(HttpServletResponse.SC_CONFLICT, "Email already registered!");
         } else {

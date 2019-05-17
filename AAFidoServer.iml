@@ -12,9 +12,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/out/production/AAFidoServer" />
-    <output-test url="file://$MODULE_DIR$/out/test/AAFidoServer" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>

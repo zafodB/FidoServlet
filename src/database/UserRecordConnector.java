@@ -84,17 +84,23 @@ public class UserRecordConnector {
      * @return User record as a {@link UserRecordStore} object.
      * @throws DatabaseException Throws an exception if the user record was not found.
      */
-    public static UserRecordStore findByUserName(String uniqueName) throws DatabaseException{
+    public static UserRecordStore findByUserName(String uniqueName) throws DatabaseException {
         UserRecordStore record = collection.find(eq(DatabaseReference.USER_RECORD_PARAMETER_UNIQUENAME, uniqueName)).first();
 
-        if (record == null){
+        if (record == null) {
             throw new DatabaseException("The user record was not found in the database for unique name: " + uniqueName);
         }
 
         return record;
     }
 
-    public static boolean doesUserNameExist(String uniqueName){
+    /**
+     * Queries the database for given unique name and returns true if the unique name exists in the database.
+     *
+     * @param uniqueName Name to be looked up.
+     * @return Whether or not the name exists in the database.
+     */
+    public static boolean userNameExists(String uniqueName) {
         UserRecordStore record = collection.find(eq(DatabaseReference.USER_RECORD_PARAMETER_UNIQUENAME, uniqueName)).first();
 
         return record != null;
@@ -107,10 +113,10 @@ public class UserRecordConnector {
      * @return User record as a {@link UserRecordStore} object.
      * @throws DatabaseException Throws an exception if the user record was not found.
      */
-    public static UserRecordStore findByUserHandle(ByteArray userHandle) throws DatabaseException{
+    public static UserRecordStore findByUserHandle(ByteArray userHandle) throws DatabaseException {
         UserRecordStore record = collection.find(eq(DatabaseReference.USER_RECORD_PARAMETER_USERHANDLE, userHandle.getBase64())).first();
 
-        if (record == null){
+        if (record == null) {
             throw new DatabaseException("The user records was not found in the database for user handle: " + userHandle.getBase64());
         }
 

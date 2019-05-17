@@ -5,12 +5,12 @@ Made by Filip Adamik on 17/05/2019
 
 <html>
 <head>
-    <title>FIDO demo: Sign-in</title>
+    <title>Sign-in | FIDO demo</title>
 </head>
 
 <style>
     .content {
-        max-width: 500px;
+        max-width: 300px;
         margin: auto;
     }
 </style>
@@ -20,6 +20,9 @@ Made by Filip Adamik on 17/05/2019
 
 <body>
 <div class="content">
+    <p style="text-align:right"><a href="https://fidoserver.ml/AAFidoServer/register">Register</a></p>
+    <br>
+    <br>
 
     E-mail:
 

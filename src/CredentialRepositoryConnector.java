@@ -1,3 +1,5 @@
+/* Made by Filip Adamik on 17/05/2019 */
+
 import Model.RegisteredCredentialStore;
 import Model.UserRecordStore;
 import com.yubico.webauthn.CredentialRepository;
@@ -7,11 +9,9 @@ import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 import database.DatabaseException;
 import database.UserRecordConnector;
 
-import javax.xml.crypto.Data;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
 
 public class CredentialRepositoryConnector implements CredentialRepository {
 
