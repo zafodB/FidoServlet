@@ -1,14 +1,13 @@
+/* Made by Filip Adamik on 17/05/2019 */
+
 package Model;
 
-import com.yubico.webauthn.RegisteredCredential;
-import com.yubico.webauthn.RegistrationResult;
-import com.yubico.webauthn.data.ByteArray;
-import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
-
 import java.util.Map;
-import java.util.Set;
 
-public class UserRecord {
+/**
+ * Model to store user records.
+ */
+public class UserRecordStore {
 
     private String userHandle;
     private String uniqueName;
@@ -16,10 +15,16 @@ public class UserRecord {
 
     private Map<String, RegisteredCredentialStore> credentials;
 
-    public UserRecord() {
+    public UserRecordStore() {
     }
 
-    public UserRecord(String userHandle, String uniqueName, String displayName, Map<String, RegisteredCredentialStore> credentials) {
+    /**
+     * @param userHandle  A unique opaque user identifier.
+     * @param uniqueName  A unique name that may be displayed to the user.
+     * @param displayName A user-friendly name to be displayed to the user.
+     * @param credentials List of credentials registered with the user account. Implemented as a Map (Credential ID -> Credential details).
+     */
+    public UserRecordStore(String userHandle, String uniqueName, String displayName, Map<String, RegisteredCredentialStore> credentials) {
 
         this.userHandle = userHandle;
         this.uniqueName = uniqueName;

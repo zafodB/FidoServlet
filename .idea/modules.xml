@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SecondFidoTest.iml" filepath="$PROJECT_DIR$/SecondFidoTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AAFidoServer.iml" filepath="$PROJECT_DIR$/AAFidoServer.iml" />
     </modules>
   </component>
 </project>

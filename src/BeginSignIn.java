@@ -1,4 +1,5 @@
-import Model.SigninRequestStore;
+/* Made by Filip Adamik on 17/05/2019 */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -6,7 +7,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.yubico.webauthn.AssertionRequest;
 import com.yubico.webauthn.StartAssertionOptions;
 import database.SigninRequestConnector;
-import database.UserRecordConnector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,11 +17,9 @@ import java.util.Optional;
 
 public class BeginSignIn extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         String userEmail = req.getParameter("userData");
-
-//        System.out.println("User email was extracted and is: " + userEmail);
 
 //        TODO break the process if email is unknown.
         AssertionRequest request = RpInstance.rp.startAssertion(StartAssertionOptions.builder()
@@ -34,8 +32,6 @@ public class BeginSignIn extends HttpServlet {
                 .registerModule(new Jdk8Module());
 
         String json = jsonMapper.writeValueAsString(request);
-
-//        String userHandle = UserRecordConnector.findByUserName(request.getUsername().get()).getUserHandle();
 
         SigninRequestConnector.addRecord(request.getPublicKeyCredentialRequestOptions().getChallenge().getBase64Url(), json);
 

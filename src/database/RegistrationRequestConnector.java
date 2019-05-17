@@ -2,7 +2,8 @@
 
 package database;
 
-import Model.SigninRequestStore;
+import Model.RegisteredCredentialStore;
+import Model.RegistrationRequestStore;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -16,13 +17,13 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
- * PRovides methods to manipulate Sign-in requests in the database.
+ * Provides methods to manipulate Registration Request entries in the database.
  */
-public class SigninRequestConnector {
-    private static MongoCollection<SigninRequestStore> collection;
+public class RegistrationRequestConnector {
 
+    private static MongoCollection<RegistrationRequestStore> collection;
 
-    // Bootstrap connection to database
+    // Bootstrap connection to the database.
     static {
         MongoClient mongoClient = MongoClients.create();
 
@@ -31,32 +32,31 @@ public class SigninRequestConnector {
 
         MongoDatabase database = mongoClient.getDatabase(DatabaseReference.DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
 
-        collection = database.getCollection(DatabaseReference.SIGNIN_REQUESTS_COLLECTION_NAME, SigninRequestStore.class);
+        collection = database.getCollection(DatabaseReference.REGISTRATION_REQUESTS_COLLECTION_NAME, RegistrationRequestStore.class);
     }
 
     /**
-     * Add Sign-in request to database.
-     *
+     * Add new RegistrationRequest
      * @param requestId ID of the new request.
-     * @param json Request as JSON.
+     * @param json Request in the JSON form.
      */
     public static void addRecord(String requestId, String json){
-        collection.insertOne(new SigninRequestStore(requestId, json));
+        collection.insertOne(new RegistrationRequestStore(requestId, json));
     }
 
     /**
-     * Retrieve existing request by its ID.
-     *
-     * @param requestId ID of the request to be retrieved.
-     * @return Sign-in request as {@link SigninRequestStore SigninRequestStore} object.
+     * Retrieve an existing Registration Request.
+     * @param requestId requestId ID of the request to be retrieved.
+     * @return Registration request as {@link RegistrationRequestStore RegistrationRequestStore} object.
      * @throws DatabaseException Throws an exception if the record was not found in the database.
      */
-    public static SigninRequestStore getRecord(String requestId) throws DatabaseException{
-        SigninRequestStore request = collection.find(eq(DatabaseReference.SIGNIN_REQUEST_PARAMETER_ID, requestId)).first();
+    public static RegistrationRequestStore getRecord(String requestId) throws DatabaseException{
+        RegistrationRequestStore request = collection.find(eq(DatabaseReference.REGISTRATION_REQUEST_PARAMETER_ID, requestId)).first();
 
         if (request == null){
             throw new DatabaseException("The request was not found in the database.");
         }
+
         return  request;
     }
 
@@ -65,15 +65,13 @@ public class SigninRequestConnector {
      * @param requestId ID of the request to be removed.
      */
     public static void removeRecord(String requestId){
-        collection.deleteOne(eq(DatabaseReference.SIGNIN_REQUEST_PARAMETER_ID, requestId));
+        collection.deleteOne(eq(DatabaseReference.REGISTRATION_REQUEST_PARAMETER_ID, requestId));
     }
 
     /**
-     * Delete entire collection
+     * Delete entire collection.
      */
     public static void dropCollection(){
         collection.drop();
     }
 }
-
-

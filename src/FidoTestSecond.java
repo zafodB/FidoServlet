@@ -3,14 +3,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.yubico.webauthn.StartRegistrationOptions;
-import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
 import com.yubico.webauthn.data.UserIdentity;
-import database.PkRequestConnector;
+import database.RegistrationRequestConnector;
 import database.UserRecordConnector;
 
-import java.util.Arrays;
-import java.util.Random;
 import javax.servlet.http.*;
 
 public class FidoTestSecond extends HttpServlet {
@@ -39,8 +36,8 @@ public class FidoTestSecond extends HttpServlet {
 
         String json = jsonMapper.writeValueAsString(pkrequest);
 
-        PkRequestConnector.dropCollection();
-        PkRequestConnector.addRecord(pkrequest.getChallenge().toJsonString(), json);
+        RegistrationRequestConnector.dropCollection();
+        RegistrationRequestConnector.addRecord(pkrequest.getChallenge().toJsonString(), json);
 
         response.getWriter().println(json);
 

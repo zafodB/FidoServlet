@@ -1,4 +1,4 @@
-import Model.PkRequestStore;
+import Model.RegistrationRequestStore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -6,14 +6,13 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.yubico.webauthn.FinishRegistrationOptions;
 import com.yubico.webauthn.RegistrationResult;
 import com.yubico.webauthn.data.*;
-import database.PkRequestConnector;
+import database.RegistrationRequestConnector;
 import database.UserRecordConnector;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Random;
 
 import static database.UserRecordConnector.generatUserHandle;
 
@@ -45,8 +44,8 @@ public class FinalizeCredentials extends HttpServlet {
 
             ByteArray challengeEncoded = pkcResponse.getResponse().getClientData().getChallenge();
 
-            PkRequestStore pkRecord = PkRequestConnector.getRecord(new String(challengeEncoded.getBytes()));
-            String pkRecordChallenge = recodeChallenge(pkRecord.getPkRequestAsJson());
+            RegistrationRequestStore pkRecord = RegistrationRequestConnector.getRecord(new String(challengeEncoded.getBytes()));
+            String pkRecordChallenge = recodeChallenge(pkRecord.getRequestAsJson());
 
             PublicKeyCredentialCreationOptions pkcRequest = jsonMapper
                     .readValue(pkRecordChallenge, PublicKeyCredentialCreationOptions.class);

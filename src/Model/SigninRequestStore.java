@@ -1,14 +1,23 @@
+/* Made by Filip Adamik on 17/05/2019 */
+
 package Model;
 
+/**
+ * Model to temporarily store Sign-in requests
+ */
 public class SigninRequestStore {
 
-    String requestId;
-    String signinRequestAsJson;
+    private String requestId;
+    private String signinRequestAsJson;
 
-    public SigninRequestStore(){
+    public SigninRequestStore() {
 
     }
 
+    /**
+     * @param requestId           Sign-in request ID.
+     * @param signinRequestAsJson Sign-in request body in JSON String.
+     */
     public SigninRequestStore(String requestId, String signinRequestAsJson) {
         this.requestId = requestId;
         this.signinRequestAsJson = signinRequestAsJson;
