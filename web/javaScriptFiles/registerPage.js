@@ -1,6 +1,6 @@
 window.onload = function () {
     document.getElementById("make-credential-button").addEventListener("click", registerNewCredential);
-}
+};
 
 function registerNewCredential() {
 

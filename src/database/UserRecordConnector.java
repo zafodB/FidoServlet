@@ -27,7 +27,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  */
 public class UserRecordConnector {
 
-    private static MongoCollection<UserRecordStore> collection;
+    private static final MongoCollection<UserRecordStore> collection;
 
     //Bootstrap connection to the database
     static {

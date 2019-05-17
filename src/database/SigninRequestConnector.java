@@ -19,7 +19,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * PRovides methods to manipulate Sign-in requests in the database.
  */
 public class SigninRequestConnector {
-    private static MongoCollection<SigninRequestStore> collection;
+    private static final MongoCollection<SigninRequestStore> collection;
 
 
     // Bootstrap connection to database

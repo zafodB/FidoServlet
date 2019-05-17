@@ -20,7 +20,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  */
 public class RegistrationRequestConnector {
 
-    private static MongoCollection<RegistrationRequestStore> collection;
+    private static final MongoCollection<RegistrationRequestStore> collection;
 
     // Bootstrap connection to the database.
     static {

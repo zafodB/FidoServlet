@@ -2,9 +2,9 @@ import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.RelyingPartyIdentity;
 
-public class RpInstance {
+class RpInstance {
 
-    static RelyingParty rp;
+    static final RelyingParty rp;
 
     static {
         RelyingPartyIdentity rpIdentity = RelyingPartyIdentity.builder()
@@ -18,7 +18,7 @@ public class RpInstance {
                 .build();
     }
 
-    public static String recode(int cutAtPosition, int cutUntilPosition, String input){
+    static String recode(int cutAtPosition, int cutUntilPosition, String input){
         String firstPart = input.substring(0, cutAtPosition);
         String middle = input.substring(cutAtPosition, cutUntilPosition);
         String lastPart = input.substring(cutUntilPosition);

@@ -22,7 +22,7 @@ public class UserRecordStore {
      * @param userHandle  A unique opaque user identifier.
      * @param uniqueName  A unique name that may be displayed to the user.
      * @param displayName A user-friendly name to be displayed to the user.
-     * @param credentials List of credentials registered with the user account. Implemented as a Map (Credential ID -> Credential details).
+     * @param credentials List of credentials registered with the user account. Implemented as a Map (Credential ID - Credential details).
      */
     public UserRecordStore(String userHandle, String uniqueName, String displayName, Map<String, RegisteredCredentialStore> credentials) {
 

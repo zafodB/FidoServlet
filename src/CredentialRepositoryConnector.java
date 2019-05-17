@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class CredentialRepositoryConnector implements CredentialRepository {
+class CredentialRepositoryConnector implements CredentialRepository {
 
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String userName) {
